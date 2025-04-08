@@ -1,0 +1,55 @@
+typredef struct GraphRep{
+int nE;
+int nV;
+int *edges;
+}GraphRep;
+
+Graph newgraph(int v){
+assert(v>=0);
+Graph g = malloc(sizeof(GraphRep));
+assert(g!=NULL);
+g->nE=0;
+g->nV=v;
+g->edges = calloc(v,sizeof(Edge));
+assert(g->edges!=NULL);
+return g;
+}
+
+void insertEdge(Graph g, Edge e){
+if(g!=NULL)
+return;
+if(!g->edges[e].v){
+g->edges[e].v=e.v;
+g->edges[e].w=e.w;
+g->nE++;
+}
+}
+
+
+bool validEdge(Graph g, Edge e){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
