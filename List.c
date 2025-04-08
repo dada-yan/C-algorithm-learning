@@ -185,3 +185,28 @@ int half-data (List n){
   }
 
 
+List reverse(List n){
+  if(n==NULL){
+    return n;
+  }
+  List temp;
+  List pass;
+    pass =NULL;
+  while(n!=NULL){
+  temp = n->next;
+    n->next = pass;
+    pass =n;
+    n=temp;
+  }
+  return pass;
+}
+
+
+
+
+
+
+
+
+
+
