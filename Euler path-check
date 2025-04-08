@@ -1,0 +1,70 @@
+#define MAX 100
+
+int num_of_degree_each(Graph g, Vertex v){
+int w;
+int num=0;
+for(w=0;w<numofvertex(g);w++){
+if(adjacent(g,v,w)){
+num++;
+}
+}
+return num;
+}
+
+int visited[MAX];
+void num_of_degree_all(Graph g){
+int i;
+for(i=0;i<numofvertex(g);i++){
+visited[i]=-1;
+}
+int v,w;
+for(v=0;v<numofvertex(g);v++){
+int num =0;
+for(w=0;w<numofvertex(g);w++){
+if(adjacent(g,v,w)){
+num ++;
+}
+}
+visited[v]=num;
+}
+}
+
+bool checkEuler (Graph g){
+int u;
+int num=0;
+for (u=0;u<numofvertex(g);u++){
+if(visited[u]%2==1){
+num++;
+}
+}
+if(num ==0 || num ==2){
+return true;
+}
+return false;
+}
+
+
+bool v_w_checkEuler (Graph g,vertex v,vertex w){
+/*
+建议先判断图是否存在连通性，先判断图是否存在欧拉路径，再进行v跟w之间是否存在欧拉路径判断*/
+
+if(checkEuler(Graph g)){
+
+if(num_of_degree_each(g,v)%2==1 && num_of_degree_each(g,w)%2==1 &&v!=w){
+int i;
+for(i=0;i<numofvertex(g);i++){
+if(i!=v && i!=w && num_of_degree_each(g,i)%2==1){
+return false;
+}
+}
+return true;
+}
+int n;
+for(n=0;n<numofvertex(g);n++){
+if(num_of_degree_each(g,n)%2==1){
+return false;
+}
+}
+return true;
+}
+}
