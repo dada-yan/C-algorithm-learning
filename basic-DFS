@@ -4,6 +4,14 @@ include"Graph.h"
 #define MAXvertex 100
 int visited[MAXvertex];
 
+void findpath(Graph g, vertex original, vertex dest){
+if(original == dest){
+printf("%d\n",original);
+}else{
+findpath(g, original, visited[dest])
+printf("-%d\n",dest);
+}
+}
 
 boo finddfs(Graph g,vertex original, vertex dest){
 int i;
@@ -61,10 +69,14 @@ if(scanf("%d",&dest)!=1)
 return 1;
 if(validvertex(g,original)!=true)
 return 1;
-if(finddfs(g,original, dest))
+if(finddfs(g,original, dest)){
 printf("find dest\n",dest);
-else
+findpath(g,original,dest);
+}
+else{
 printf("not find dest");
+printf("\n");
+}
 
 freeGraph(g);
 return 0;
