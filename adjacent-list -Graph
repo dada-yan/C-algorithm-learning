@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdbool.h>
+#include"Graph.h"
+#include"List.c"
+
+typedef struct GraphRep{
+int nV;
+int nE;
+int *edges;
+}GraphRep;
+
+Graph newgraph(int n){
+assert(n>=0);
+Graph g = malloc(sizeof(GraphRep));
+g->nE =0;
+g->nV = n;
+g->edges =calloc(n,sizeof(List));
+assert(g->edges!=NULL);
+return g;
+}
+int numofvertex(Graph g){
+return(g->nV);
+}
+bool validEdge(Graph g, Edge e){
+if(0<=e.v<=g->nV&&0<=e.w<=g->nV){
+return true;
+}
+return false;
+}
+
+bool check(Graph g, Edge e){
+if(checklist(g->edges[e.v],e.w) ||checklist(g->edges[e.w],e.v)){
+return true;
+}
+return false;
+}
+
+
+void insertEdge(Graph g, Edge e){
+if(check(g,e))
+return;
+g->edges[e.v]=insertnode(g->edges[e.v],e.w);
+g->edges[e.w]= insertnode(g->edges[e.w],e.v);
+g->nE++;
+}
+void deleteEdge(Graph g, Edge e){
+
+}
+
+
+
+
+
+bool adjacent(Graph g, vertex v, vertex w){
+
+}
+
