@@ -44,14 +44,47 @@ g->edges[e.w]= insertnode(g->edges[e.w],e.v);
 g->nE++;
 }
 void deleteEdge(Graph g, Edge e){
-
+if(check(g,e)){
+g->edges[e.v] = deletecode(g->edges[e.v],e.w);
+g->edges[e.w] = deletecode(g->edges[e.w],e.v);
+g->nE--;
 }
-
-
-
+}
 
 
 bool adjacent(Graph g, vertex v, vertex w){
-
+check(g->edges[e.v],e.w||g->edges[e.w],e.v){
+return true;
 }
+return flase;
+}
+
+void showgraph(Graph g){
+int i,n;
+for(i=0;i<g->nV;i++){
+for(n=0;n<g->nV;n++){
+if(adjacent(g,i,n)){
+printf("%d-%d",i,n);
+}
+}
+}
+}
+
+void freeGraph(Graph g){
+int i;
+for(i=0;i<g->nV;i++){
+freelist(g->edges[i]);
+}
+free(g->edges);
+free(g);
+}
+
+
+
+
+
+
+
+
+
 
