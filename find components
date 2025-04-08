@@ -1,0 +1,69 @@
+#include<stdio.h>
+#include<stdbool.h>
+#include"Graph.h"
+#define MAX 100
+
+int component[MAX];
+
+
+int findcomponent(Graph g){
+int i;
+for(i=0;i<numofvertex(g);i++){
+component[i]=-1;
+}
+int v;
+int numofcomp = 0;
+for(v=0;v<numofvertex(g);v++){
+if(component[v]==-1){
+checkcomp(g,v,numofcomp);
+numofcomp ++;
+}
+}
+return numofcomp;
+}
+
+void checkcomp(Graph g, vertex v, int numofcomp){
+ component[v]=numofcomp;
+ int w;
+ for(w=0;w<numofvertex(g);w++){
+ if(adjacent(g,v,w)&&component[w]==-1){
+  checkcomp(g,w,numofcomp);
+ }
+ }
+}
+int main(int argc,char *argv[]){
+int num;
+if(scanf("%d",&num)!=1)
+return 1;
+Graph g = newgraph(num);
+Edge e;
+while(1){
+if(scanf("%d",&e.v)!=1)
+break;
+if(scanf("%d",&e.w)!=1)
+break;
+if(!validEdge(g,e))
+break;
+insertEdge(g,e);
+}
+
+int components = findcomponent(g);
+printf("number of components:%d\n",component);
+int i;
+int k;
+for(i=0;i<components;i++){
+printf("number %d\n",i+1);
+for(k=0;k<numofvertex(g);k++){
+if(component[k]==i){
+printf("-%d\n",k);
+}
+}
+}
+
+retunr 0;
+
+
+
+
+
+}
