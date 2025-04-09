@@ -1,0 +1,62 @@
+
+#define MAX 100
+int visited[MAX];
+
+
+bool findhalmelton(Graph g,int original, int dest){
+  int i;
+  for(i=0;i<numofvertex(g);i++){
+    visited[i]=false;
+  }
+  visited[original]=true;
+  if(check(g,original,dest,numofvertex(g)-1))
+    return true;
+  return false;
+}
+
+bool check(Graph g, int original, int dest, int n){
+  if(orginal==dest){
+    if(n==0){
+      return true;
+    }
+    return false;
+  }
+
+int w;
+  for(w=0;i<numofvertex(g);w++){
+    if(adjacent(g,original,w)&&visited[w]==false){
+      visited[w]=true;
+      if(check(g,w,dest,n-1))
+        return true;
+    }
+    visted[w]=false;
+  }
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
