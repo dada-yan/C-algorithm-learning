@@ -15,28 +15,66 @@ assert(g->edges!=NULL);
 return g;
 }
 
+
+bool check(Edge e1, Edge e2){
+if(e1.v==e2.v&&e1.w==e2.w&&e1.v==e2.w&&e2.v ==e1.w)
+return true;
+return false;
+}
+
+bool validEdge(Graph g, Edge e){
+if(0<=e.v<g->nV&&0<=e.w<g->nV)
+return true;
+return false;
+}
+
 void insertEdge(Graph g, Edge e){
-if(g!=NULL)
-return;
-if(!g->edges[e].v){
-g->edges[e].v=e.v;
-g->edges[e].w=e.w;
+if(!valid(g,e))
+return false;
+int i=0;
+while(i<g->nE&&!check(g,e))
+i++;
+if(i==g->nE){
+g->edges[i]=e;
 g->nE++;
 }
 }
 
-
-bool validEdge(Graph g, Edge e){
-
+void deleteEdge(Graph g, Edge e){
+if(!valid(g,e))
+return false;
+int i=0;
+while(i<g->nE&&check(g,e)){
+i++
+}
+if(i<g->nE){
+g->edges[i]=g->edges[--g->nE];
+}
 }
 
+bool adjacent(Graph g, Vertex v, Vertex w){
+int i;
+for(i=0;i<g->nE;i++){
+if(g->edges[i].v==v&&g->edges[i].w==w||g->edges[i].w==v&&g->edges[i].v==w)
+return true;
+}
+return false;
+}
 
-
-
-
-
-
-
+void freegraph(Graph g){
+int i;
+for(i=0;i<g->nE;i++){
+free(g->edges[i]);
+}
+free(g->edges)
+free(g);
+}
+void printgraph(Graph g){
+int i;
+for(i=0;i<g->nE;i++){
+printf("%d-%d\n",g->edges[i].v,g->edges[i].w);
+}
+}
 
 
 
