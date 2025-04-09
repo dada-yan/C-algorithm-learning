@@ -1,0 +1,52 @@
+int vertex *vertex;
+
+typedef struct Edge{
+vertex v;
+vertex w;
+int weight;
+}Edge;
+
+typedef struct Edge *Edge;
+
+typedef struct GraphRep{
+int nV;
+int nE;
+int *edges;
+}GraphRep;
+
+typedef struct GraphRep *Graph;
+
+Graph newgraph(int n){
+assert(n>0);
+Graph g = malloc(sizeof(GraphRep));
+assert(g!=NULL);
+g->nV=n;
+g->nE=0;
+g->edges =  calloc(n,sizeof(Edge))
+return g;
+}
+
+void insertedge(Graph g, Edge e){
+if(!valid(g,e))
+return false;
+int i=0;
+while(i<g->nE&&euqal(g,e,g->edges[i])){
+i++
+}
+if(i==g->nE){
+g->edges[i]=e;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
