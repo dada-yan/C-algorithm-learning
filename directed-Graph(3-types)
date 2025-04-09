@@ -1,0 +1,269 @@
+#include <studio.h>
+#include<stdbool.h>
+#inlucde"Graph.h"
+#include"List.h"
+
+  typedef struct GraphRep{
+  int nE;
+  int nV;
+  int **edges //int *edges
+  }GraphRep;
+
+//adjacent-matrix Graph
+
+Graph newgraph(int n){
+  assert(n>=0);
+  Graph g = malloc(sizeof(GraphRep));
+  assert(g!=NULL);
+  g->nE =0;
+  g->nV = n;
+  g->edges = calloc(n,sizeof(int*));
+  assert(g->edges!=NULL);
+  int i;
+  for(i=0;i<n;i++){
+    g->edges[i]=calloc(n,sizeof(int));
+    assert(g->edges[i]!=NULL);
+  }
+  return g;
+}
+
+bool validEdge(Graph g, Edge e){
+  if((0<e.v)<=g->nV&&(0<e.w)<=g->nV)
+    return true;
+  return false;
+}
+
+bool check(Graph g, Edge e){
+  if(!validEdge(g,e))
+    return false;
+  if(g->edges[e.v][e.w]==1){
+    return true;
+  }else{
+    return false;
+  }
+  
+}
+
+void insertEdge(Graph g, Edge e){
+  if(!validEdge(g,e))
+    return false;
+  if(check(g,e))
+    return false;
+  if(g->edges[e.v][e.w]==0){
+    g->edges[e.v][e.w]=1;
+    g->nE++;
+  }
+}
+
+void deleteEdge(Graph g, Edge e){
+  if(!validEdge(g,e))
+    return false;
+  if(check(g,e)&&g->edges[e.v][e.w]==1){
+    g->edges[e.v][e.w]=0;
+    g->nE--;
+  }
+}
+
+
+bool adjacent(Graph g, Vertex v, Vertex w){
+  if(!validEdge(g,e))
+    return false;
+  if(g->edges[v][w]==1)
+    return true;
+  return false;
+}
+
+void freegraph(Graph g){
+  int i,n;
+  for(i=0;i<g->nV;i++){
+    for(n=0;n<g-nV;n++){
+      free(g->edges[i][n]);
+    }
+    free(g->edges[i]);
+  }
+  free(g->edges);
+  free(g);
+}
+
+
+void printgraph(Graph g){
+  int i,n;
+  for(i=0;i<g->nV;i++){
+    for(n=0;n<g->nV;n++){
+      if(adjacent(g,i,n)){
+        printf("%d-%d\n",i,n);
+      }
+    }
+  }
+}
+
+
+
+//adjacent-list graph
+
+Graph newgraph(int n){
+  assert(n>=0);
+  Graph g = malloc(sizeof(GraphRep));
+  assert(g!=NULL);
+  g->nE=0;
+  g->nV=n;
+  g->edges = calloc(n,sizeof(List));
+  assert(g->edges!=NULL);
+  return g;
+}
+
+bool validEdge(Graph g, Edge e){
+  if(e.v>0&&e.v<g->nV&&e.w>0&&e.w<g->nV)
+    return true;
+  return false;
+}
+
+bool adjacent(Graph g, vertex v, vertex w){
+  if(checklist(g->edges[v],w)||checklist(g->edges[w].v))
+    return true;
+  return false;
+}
+
+bool check(Graph g, Edge e){
+  if(!validEdge(g,e))
+    return false;
+  if(checklist(g->edges[e.v],e.w||checklist(g->edges[e.w],e.v)))
+    return true;
+  return false;
+}
+
+void insertedge(Graph g, Edge e){
+  if(!validedge(g,e))
+    return false;
+  if(check(g,e))
+    return false;
+  g->edges[e.v]=insert(g->edges[e.v],e.w);
+  g->nE++;
+}
+
+void deleteedge(Graph g, Edge e){
+  if(!validedge(g,e))
+    return false;
+  if(!check(g,e))
+    return false;
+  g->edges[e.v]=deletelist(g->edges[e.v],e.w);
+  g->nE--;
+}
+
+void freegraph(Graph g){
+  int i;
+   for (i=0;i<g->nV;i++){
+     free(g->edges[i]);
+   }
+  free(g->edges);
+  free(g);
+}
+
+
+void printgraph(Graph g){
+  int i,n;
+  for(i=0;i<g-nV;i++){
+    printlist(g->edges[i]);
+  }
+}
+
+
+
+//edge-adjacent-Graph
+
+Graph newgraph(int n){
+  assert(n>0);
+  Graph g =malloc(sizeof(GraphRep));
+  assert(g!=NULL);
+  g->nE = 0;
+  g->nV = n;
+  g->edges = calloc(n,sizeof(Edge));
+  asseert(g->edges!=NULL);
+  return g;
+}
+
+bool validEdge(Graph g, Edge e){
+  if(0<e.v&&e.v<g->nV&0<e.w&&e.w<g->nV)
+    return true;
+  return false;
+}
+
+bool check(Grpah g, Edge e){
+  int i;
+  for(i=0;i<g->nE;i++){
+    if(g->edges[i].v==e.v&&g->edges[i].w==e.w)
+      return true;
+  }
+  return fasle;
+}
+
+bool adjacent(Graph g, Vertex v, Vertex w){
+  int i;
+  for(i=0;i<g->nE;i++){
+    if(g->edges[i].v==v&&g->edges[i].w==w)
+      return true;
+  }
+  return false;
+}
+
+bool equaledge(g,e1,e2){
+  if(e1.v==e2.v&&e1.w==e2.w)
+    return true;
+  return false;
+}
+
+void insertedge(Grpah g, Edge e){
+  if(!valid(g,e))
+    return false;
+  int i;
+  if(check(g,e))
+    return false;
+while(i<g->nE)
+  i++;
+  if(i==g->nE){
+    g->edges[i]=e;
+    g->nE++;
+  }
+}
+
+
+
+void deleteedge(Graph g, edge e){
+  if(!valid(g,e))
+    return false;
+  if(!check(g,e))
+    return false;
+  int i;
+  while(i<g->nE&&!euqaledge(g,e,g->edges[i])){
+    i++;
+  }
+  if(i<g->nE){
+    g->edges[i]=g->edges[--g->nE];
+  }
+}
+
+void freegraph(Graph g){
+  int i;
+  for(i=0;i<g->nE;i++){
+    free(g->edges[i]);
+  }
+  free(g->edges);
+  free(g);
+}
+
+void printgraph(Graph g){
+  int i;
+  for(i=0;i<g->nE;i++){
+    printf("%d-%d\n",g->edges[i].v,g->edges[i.w]);
+  }
+}
+
+
+
+
+
+
+
+
+
+
