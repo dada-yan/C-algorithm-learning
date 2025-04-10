@@ -1,0 +1,101 @@
+#define MAX 1000000
+
+bool bfscheck(Graph g, vertex v, vertex w, visited[]){
+int i;
+int nV=numofvertex(g);
+for(i=0;i<nV;i++){
+visited[i]=-1;
+}
+Queue q= newqueue( v);
+while(!queueisempty){
+int n = queuedequeue(q);
+if(n==w){
+dropqueue(q);
+return true;
+}
+for(i=0;i<nV;i++){
+if(adjacent(g,v,i)){
+int dist;
+dist = adjacent_weight(g,v,i);
+if(visited[i]==-1&&dist>flow[v][i]){
+visited[i]=v;
+queueenqueue(q,i);
+}
+}
+}
+}
+dropqueue(q);
+return false;
+}
+
+
+
+int edmondskarp(Graph g, vertex original, vertex dest){
+vertex v,w;
+int nV=numofvertex(g);
+int*visited = calloc(nV,sizeof(int));
+assert(visited!=NULL);
+for(v=0;v<nV;v++){
+for(w=0;w<nV;w++){
+flow[v][w]=0;
+}
+}
+int maxflow =0;
+while(bfs(g,original,dest,visited[])){
+int df = MAX;
+for(v=dest;v!=original;v=visited[v]){
+int weight = adjacent(g,visited[v],v);
+if(weight<df){
+df = weight;    //mini flow
+}
+}
+for(v=dest;v!=original;v=visited[]){
+flow[visited[v]][v]=flow[visited[v]][v]+df;
+flow[v][visited[v]]=flow[v][visited[v]]-df;
+}
+maxflow = maxflow +df;
+}
+free visited;
+return flow;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
