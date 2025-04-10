@@ -1,0 +1,76 @@
+Graph kruskal (Graph g, Edges e[], nE){
+int i;
+int nV=numofvertex(g);
+Graph mst = mewgraph(nV);
+int n=0;
+for(i=0;i<nE&&n<nV-1;i++){
+Edges e;
+e= e[i];
+n++
+int w;
+for(w=0;w<nV;w++){
+visited[w]=-1;
+}
+insert(mst,e);
+if(dfscycle(mst,e.v,e.v)==true){
+remove(mst,e);
+n--;
+}
+}
+return mst;
+}
+
+
+dfscycle(Graph mst, vertex v, vertex n){
+int w;
+for(w=0;w<nV;w++){
+if(adjacent(mst,v,w)||adjacent(mst,w,v)){
+if(visited[w]==-1){
+visited[w]=v;
+if(dfscycle(mst, w, n))
+return true;
+}else if(w!=n){
+return true;
+}
+}
+}
+return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
