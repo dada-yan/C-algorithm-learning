@@ -64,12 +64,62 @@ return flow;
 
 
 
+int flow[][];
+bool bfs(Grpah g, vertex v, vertex w,visited[]){
+int i;
+int nV= numofvertex(g);
+for(i=0;i<nV;i++){
+visited[i]=-1;
+}
+
+Queue q = newqueue(v);
+while(!queueisempty){
+int n;
+int n=queuedequeue(q);
+if(n==w){
+dropqueue(q);
+return true;
+}
+for(i=0;i<nV;i++){
+if(adjacent(g,v,i)){
+int weight = adjacent_weight(g,v,i);
+if(visited[i]==-1&&weight<flow[v][i]){
+visited[i]=v;
+queueenqueue(q,i);
+}
+}
+}
+}
+dropqueue(q);
+return false;
+}
 
 
 
-
-
-
+int edmondskarp(Graph g, vertex original, vertex dest){
+int i,o;
+int nV=numofvertex(g);
+for(i=0;i<nV;i++){
+for(o=0;o<nV;o++){
+flow[i][o]=0;
+}
+}
+while(bfs(g,original,dest)){
+int df=MAX;
+for(i=original;i!=dest;i=visited[i]){
+int weight = adjacent(g,visited[i],i);
+if(weight<df){
+df = weight;   //mini flow
+}
+}
+for(i=original;i!=dest;i=visited[i]){
+flow[visited[i]][i]=flow[visited[i]][i]+df;
+flow[i][visited[i]]=flow[i][visited[i]]-df;
+}
+maxflow = maxflow+df;
+}
+return maxflow;
+}
 
 
 
