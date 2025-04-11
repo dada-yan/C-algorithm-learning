@@ -1,0 +1,243 @@
+//prim-graph
+#define MAX 100000
+Graph prim (Graph g, vertex original){
+int i;
+int n=0;
+int nV =numofvertex(g);
+bool *visited = calloc(nV,sizeof(boll));
+int *parent = calloc(nV,sizeof(int));
+int *weight = calloc(nV,sizeof(int));
+for(i=0;i<nV;i++){
+visited[i]=false;
+parent[i]=-1;
+weight[i] = MAX;
+}
+weight[original]=0;
+for(i=0;i<nV;i++){
+int u=-1;
+int min = MAX;
+for(n=0;n<nV;n++){
+if(visited[n]==false&&weight[n]<min){
+min = weight[n];
+u = n;
+}
+}
+if(u==-1){
+break;
+}
+visited[u]=true;
+for(n=0;n<nV;n++){
+g = adjacent_weight(g,u,n);
+if(g>0&&visited[n]==false&&g<weight[n]){
+   wieght[n]=g;
+   parent[n]=u;
+}
+}
+}
+Graph mst = newgraph(nV);
+for(i=0;i<nV;i++){
+if(paren[i]!=-1){
+e.v=parent[i];
+e.w = i;
+e.weight = weight[i];
+insert(mst,e);
+}
+}
+return mst;
+free(visited);
+free(parent);
+free(weight);
+}
+
+
+
+//dijkstra
+#define MAX 10000
+int parent[MAX];
+int weight[MAX];
+void dijkstra(Graph g, vertex original){
+int nV= numofvertex(g);
+int i,n;
+bool *visited = calloc(nV,sizeof(bool));
+for(i=0;i<nV;i++){
+parent[i]=-1;
+weight[i]=MAX;
+visited[i]=false;
+}
+weight[original]=0;
+for(i=0;i<nV;i++){
+int u= -1;
+int min =MAX;
+for(n=0;n<nV;n++){
+if(visited[n]==false&&weight[n]<min){
+u= n;
+min =weight[n];
+}
+}
+if(u==-1)
+return false;
+visited[u]=true;
+for(n=0;n<nV;n++){
+w= adjacent_weight(g,u.n);
+if(visited[n]==false&&w>0&&w+weight[u]<weight[n]){
+weight[n]=w+weight[u];
+parent[n]=u;
+}
+}
+}
+}
+
+
+//priority queue
+typedef struct PQueueT{
+int visited[MAX];
+int length;
+}PQueueT;
+typedef struct PQueue *PQueue;
+
+PQueue pqueue(){
+PQueue q = calloc(sizeof(PQueueT));
+q->length =0;
+q->visited= calloc(sizeof(int));
+aseert(q!=NULL&&q->visited!=NULL);
+return q;
+}
+
+void insertnum(PQueue q,int n){
+assert(q!=NULL);
+int i;
+while(i<q->length&&n==q->visited[i])
+i++;
+if(q->length==i){
+q->visited[q->length]=n;
+}
+}
+
+int removenum(PQueue q){
+int u;
+int i;
+int min = 100000000;
+for(i=0;i<nV;i++){
+if(q->viisted[i]<min){
+min = q->visited[i];
+u = i;
+}
+}
+return u;
+}
+
+
+//kruskal-orgorithm
+
+
+Graph kruskal(Gragh g, edge e[]){
+int nV =numofvertex(g);
+int i;
+int n;
+Graph mst =newgraph(nV);
+for(i=0&&n=0;i<nE&&n<nV;i++&&n++){
+Edge e;
+e=e[i];
+insert(mst,e);
+if(bfs(mst,e.v,e.v)){
+n--;
+}
+}
+return mst;
+}
+
+bool bfs(Graph g, vertex v, vertex w){
+bool *visited=calloc(nV,sizeof(bool));
+int i;
+for(i=0;i<nV;i++){
+visited[i]=-1;
+}
+visited[v]=v;
+Queue q = newqueue(v);
+while(!queueisempty(q)){
+int n =queuedequeue(q);
+for(i=0;i<nV;i++){
+if(adjacent(g,n,i)){
+if(viisted[i]==-1){
+viisted[i]=n;
+queueenqueue(q,i);
+}else{
+if(i!=visited[n]){
+free(visited);
+freequeue(q);
+return true;
+}
+}
+}
+}
+}
+return false;
+}
+
+//Edmonds -algorithm
+
+bool bfs(Graph g, vertex original, vertex dest, int visited[]){
+int i;
+for(i=0;i<nV;i++){
+visited[i]=-1;
+}
+visited[original]=original;
+Queue q = newqueue(original);
+while(!queueisempty(q)){
+n = queuedequeue(q);
+if(n==dest){
+freequeue(q);
+return true;
+}
+for(i=0;i<nV;i++){
+int w = adjacent_weight(g,n,i);
+if(adjacent(g,n,i)&&w>flow[n][i]){
+if(viisted[i]==-1){
+visited[i]=n;
+queueenqueue(q,i);
+}
+}
+}
+}
+return false;
+}
+
+
+int edmonds(Graph g, vertex original, vertex dest){
+int i;
+int n;
+int nV= numofvertex(g);
+int *visited = calloc(nV,sizeof(int));
+assert(visited != NULL);
+for(i=0;i<nV;i++){
+for(n=0;n<nV;n++){
+flow[i][n]=0;
+}
+}
+while(bfs(g,original,dest,visited[])){
+int df = MAX;
+for(n=original;n!=dest;n=visited[n]){
+w = adjacent_weight(g,visited[n],n);
+if(w<df){
+df = w;
+}
+}
+
+for(n = original;n!=dest; n=visited[n]){
+flow[visited[n]][n]=flow[visited[n]][n]+df;
+flow[n][viisted[n]]=flow[n][visited[n]]+df;
+}
+maxflow = maxflow +df;
+}
+return maxflow;
+}
+
+
+
+
+
+
+
+
+
+
