@@ -1,0 +1,123 @@
+int topo[];
+int indegree[];
+int i;
+for(i=0;i<nv;i++){
+indegree[i]=0;
+}
+
+void topo(Graph g){
+insert(g!=NULL);
+//num of indegree
+int nv = numofvertex(g);
+int i,j;
+for(i=0;i<nv;i++){
+for(j=0;j<nv;j++){
+if(adjacent(g,i,j)){
+indegree[j]++;
+}
+}
+}
+Queue q =newqueue();
+for(i=0;i<nv;i++){
+if(indegree[i]==0){
+queueenqueue(q,i);
+}
+}
+int j=0;
+while(!queueisempty(q))
+int n = queuedequeue(q);
+topo[j++]=n;
+for(i=0;i<nv;i++){
+if(adjacent(g,n,i)){
+indegree[i]--;
+if(indegree[i]==0){
+queueenqueue(q,i);
+}
+}
+
+}
+
+}
+
+
+int et[];
+int lt[];
+
+void keyroad(Graph g){
+insert(g!=NULL);
+int i,n;
+for(i=0;i<nv;i++){
+et[i]=0;
+}
+for(i=0;i<nv;i++){
+lt[i]=MAX;
+}
+//ealist time
+
+int v,w;
+for(i=0;i<nv;i++){
+int v =topo[i];
+for(w=0;w<nv;w++){
+weight=adjacent_weight(g,v,w);
+if(weight>0&&weight+et[v]>et[w]){
+et[w]=et[v]+weight;
+}
+}
+}
+
+for(i<nV-1;i>=0;i--){
+v=topo[i];
+for(w=0;w<nV;w++){
+weight = adjacent_weight(g,v,w);
+if(weight>0&&lt[w]-weight<lt[v]){
+lt[v]=lt[w]-weight;
+}
+}
+}
+
+
+
+for(i=0;i<nv;i++){
+for(n=0;n<nv;n++){
+weight = adjacent_weight(g,i,n);
+if(weight>0&&et[i]==lt[i]-weight){
+printf("%d-%d\n",et[i],lt[i]);
+}
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
