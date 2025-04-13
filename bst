@@ -133,12 +133,44 @@ return t;
 }
 
 
+Tree deletetree(Tree t,item i){
+if(t==NULL);
+return t;
+if(i<data(t)){
+left(t)=deletetree(left(t),i);
+}else if(i>data(i)){
+right(t)=deletetree(right(t),i);
+}else{
+if(right(t)==NULL){
+return left(t);
+}else if(left(t)==NULL){
+return right(t);
+}else if(left(t)!=NULL&&right(t)!=NULL){
+Tree new;
+new = jointree(left(t),right(t));
+free(t);
+return new;
+}
+}
+return t;
+}
 
 
+Tree rotate(Tree t){
+if(t==NULL)
+return t;
+Tree t1 = left(t);
+left(t)=right(t1);
+right(t1)=t;
+return t1;
+}
 
-
-
-
+Tree rotate(Tree t){
+Tree t1 = right(t);
+right(t)=right(t1);
+left(t1)=t;
+return t1;
+}
 
 
 
