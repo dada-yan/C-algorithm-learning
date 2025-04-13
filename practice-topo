@@ -1,0 +1,124 @@
+#define max 10000000000000 
+
+int topo[];
+int in[];
+
+int topo(Graph g){
+assert(g!=NULL);
+int i,n;
+int nv = numofvertex(g);
+for(i=0;i<nv;i++){
+in[i]=0;
+topo[i]=0;
+}
+for(i=0;i<nv;i++){
+for(n=0;n<nv;n++){
+if(adjacent(g,i,n)){
+in[n]++:
+}
+}
+}
+Queue q =newqueue();
+for(i=0;i<nv;i++){
+if(in[i]==0){
+queueenqueue(q,i);
+}
+}
+int k=0;
+while(!queueisempty(q)){
+topo[k++]=queuedequeue(q);
+int a=queuedequeue(q);
+for(i=0;i<nv;i++){
+if(adjacent(g,a,i)){
+in[i]--;
+if(in[i]==0){
+queueenqueue(q,i);
+}
+}
+}
+}
+if(k!=nv){
+return 1;
+}else{
+return 0;
+}
+}
+
+int keyroad[];
+int et[];
+int lt[];
+
+void topo_keyroad(Graph g){
+assert(g!=NULL);
+int i,n;
+for(i=0;i<nv;i++){
+et[i]=0;
+lt[i]=max;
+}
+for(i=0;i<nv;i++){
+int k=topo[i];
+for(n=0;n<nv;n++){
+int weight = adjacent_weight(g,k,n);
+if(weight>0&&weight+et[k]>et[n]){
+et[n]=weight+et[k];
+}
+}
+}
+
+for(i=nv-1;i>=0;i--){
+k = topo[i];
+for(n=0;n<nv;n++){
+weight = adjacent_weight(g,n,k);
+if(weight>0&&lt[k]-weight<lt[n]){
+lt[n]=lt[k]-weight;
+}
+}
+}
+for(i=0;i<nv;i++){
+k = topo[i];
+for(n=0;n<nv;n++){
+weight = adjacent_weight(g,k,n);
+if(weight>0&&et[k]==lt[n]-weight){
+printf("%d-%d\n",et[k],lt[n]);
+}
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
