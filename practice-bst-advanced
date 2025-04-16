@@ -1,0 +1,229 @@
+
+#define data(tree)((tree)->data)
+#define left(tree)((tree)->left)
+#define right(tree)((tree)->right)
+#define Randow_num (rand()%10<4)
+
+typedef int item;
+
+
+typedef struct Tree{
+item data;
+Tree left;
+Tree right;
+}TreeT;
+
+typedef struct TreeT * Tree;
+
+Tree newtree(item n){
+Tree t = calloc(1,sizeof(int));
+assert(t!=NULL);
+data(t)=n;
+left(t)=right(t)=NULL；
+return t;
+}
+
+
+bool check(Tree t, item n){
+if(t==NULL)
+return false;
+if(data(t)==n){
+return true;
+}
+if(n<data(t)){
+left(t)=check(left(t),n)；
+}else if(n>data(n)){
+right(t)=check(right(t),n);
+}
+return false;
+}
+
+
+int numofitem(Tree t){
+if(t==NULL)
+return 0;
+
+return numofitem(left(t))+numofitem(right(t))+1;
+}
+
+int height(Tree t){
+if(t==NULL)
+return 0;
+
+int Lheight = height(left(t));
+int Rheight = height(right(t));
+
+return(Lheight>Rheight?Lheight:Rheight)+1;
+}
+
+Tree insert(Tree t, item n){
+if(t==NULL){
+return newtree(n);
+}
+if(n<data(n)){
+left(t)=insert(left(t),n);
+}else if(n>data(n)){
+right(t)=insert(right(t),n);
+}
+}
+
+Tree jointree(Tree L,Tree R){
+if(L==NULL){
+return R;
+}else if(R==NULL){
+return L;
+}else{
+Tree curring = R(left);
+Tree parent =NULL;
+while(curring(left)!=NULL){
+parent = curring;
+curring = curring(left);
+}
+if(parent!=NULL){
+Parent(left)=curring(right);
+curring(right)=R;
+}
+curring(left)=L;
+}
+return curring;
+}
+
+
+Tree delete(Tree t, item n){
+if(t==NULL)
+return NULL;
+if(n<data(n)){
+left(t)=delete(left(t),n);
+}else if(n>data(n)){
+right(t)=delete(right(t),n);
+}else{
+if(left(t)==NULL){
+int curring = right(t);
+free(t);
+return right(t);
+}else if(right(t)==NULL){
+int curring =left(t);
+free(t);
+return left(t);
+}else{
+Tree new = jointree(left(t),right(t));
+return new;
+}
+}
+}
+
+
+
+RotateL(Tree t){
+Tree curring = right(t);
+right(t)=left(curring);
+curring(left)=t;
+return curring;
+}
+
+RotateR(Tree t){
+Tree curring = left(t);
+left(t)=right(curring);
+curring(R)=t;
+return curring;
+}
+
+
+Tree insertroot(Tree t, item n){
+if(t==NULL)
+return newtree(n);
+if(n<data(t)){
+left(t)=insert(left(t),n);
+t = rotateL(t);
+}else if(n>data(n)){
+right(t)=insert(right(t),n);
+t = rotateR(t);
+}
+return t;
+}
+
+
+
+Tree insert_randow(Tree t, item n){
+if(Randow_num){
+return insertroot(t,n);
+}else{
+return insert(t,n);
+}
+}
+
+Tree insertAVL(Tree t, item n){
+if(n==NULL)
+return newtree(n);
+if(n<data(t)){
+left(t)=insertAVL(left(t),n);
+}else if(n>data(t)){
+right(t)=insertAVL(right(t),n);
+}
+int heightL =height(left(t));
+int heightR = height(right(t));
+if(heightL>heightR){
+if(n>data(left(t))){
+left(t) = insertAVL(left(t));
+}
+t =rotateR(t);
+}else if(heightR>heightL){
+if(n<data(right(t))){
+right(left(t)) = rotateR(right(t));
+}
+t=rotateL(t);
+}
+return t;
+}
+
+
+Tree insertsplay(Tree t, item n){
+if(t==NULL)
+return newtree(n);
+if(data(t)==n){
+return t;
+}
+if(left(t)==NULL){
+return newtree(t);
+if(n<data(left(t))){
+left(left(t))=insertsplay(left(left(t)),n);
+t=rotateR(left(t));
+}else if(n>data(left(t))){
+left(right(t))=insertsplay(left(right(t)),n);
+left(t)=rotateL(left(t));
+}
+return rotateR(t);
+}else if(data(right)==NULL){
+return newtree(n);
+if(n<data(right(t))){
+right(left(t))=insertsplay(right(left(t)),t);
+right(t)=rotateR(right(t));
+}else if(n>data(right(t))){
+right(t)=insertsplay(right(t),n);
+n = rotateL(t);
+}
+return rotateL(t);
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
