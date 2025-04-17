@@ -1,0 +1,216 @@
+#define print_colour_red "\x1B[31m"
+#define print_colour_black "\x1B[0m"
+#define tree(isred) (tree!=NULL &&(tree)->colour ==RED)
+#define t->data (data(t))
+#define t->left(left(t))
+#define t-right (right(t))
+
+typedef int item;
+
+typedef enum {red, black} colr;
+
+typedef struct TreeT *Tree;
+
+typedef struct Tree {
+  item data;
+  Tree left;
+  Tree right;
+  colr colour;
+}TreeT;
+
+Tree newtree(item n){
+  Tree t = calloc(1，sizeof(TreeT));
+  assert(t!=NULL);
+  t->data = n;
+  t->left = t->right =NULL;
+  t->colour = RED;
+  return t;
+}
+
+Tree RotateL(Tree t){
+  if(t->right==NULL||t==NULL)
+    return t;
+  Tree new = t->right;
+  t->right = t->right->left;
+  new->left= t;
+  //new->colour = t->colour;
+  // t->colour =RED;
+  return new;
+}
+
+  Tree RotateR(Tree t){
+    if(t->left==NULL||t==NULL)
+      return t;
+    Tree new = t->left;
+    t->left = t->left->right;
+    new->right = t;
+    // new->colour = t->colour;
+  //  t->colour =RED;
+    return new;
+  }
+
+Tree colourback(Tree t){
+  assert(t!=NULL&&t->left!=NULL&&t->right!=NULL);
+t->colour = (t->colour==RED?BLACK:RED);
+colour(t->left)=(colour(t->left)==RED ?BLACK:RED);
+  colour(t->right)=(colour(t->right)==RED?BLACK:RED);
+  return t;
+}
+
+
+Tree RBTtree(Tree t){
+  if(!(t->left(isred))&&t->t->right(isred)){
+    t = rotateL(t);
+  }
+  if(t->left(isred)&&t->left->left(isred)){
+    t = rotateR(t);
+  }
+  if(t->left(isred)&&t->right(isred)){
+    t = colourback;
+  }
+    return t;
+}
+
+Tree insertRBT(Tree t,item n){
+  if(t==NULL)
+    return newtree(n);
+  if(n<t->data){
+    t->left = insert(t->left,n);
+  }else if(n>t->data){
+    t->right = insert(t->right,n);
+  }else;
+    t =RBTtree(t);
+  t->colour = BLACK;
+  return t;
+}
+
+Tree insertAVL(Tree t,item n){
+  if(n==NULL)
+    return newtree(n);
+  if(n<data(t)){
+    left(t)=insertAVL(left(t),n);
+  }else if(n>data(t)){
+    right(t)=insertAVL(right(t),n);
+  }else;
+
+int heightL = height(left(t));
+  int heightR = height(right(t));
+  if(heightL>heightR){
+    if(n>data(left(t))){
+      rotate t->left = rotateL(t->left);
+    }
+   t= rotateR(t);
+  }else if(heightL<heightR){
+    if(n<data(t->right)){
+      right(t)=rotateR(right(t));
+    }
+    t = rotateL(t);
+  }
+    return t;
+}
+
+
+
+
+Tree insertsplay(Tree t, item n){
+  if(t==NULL)
+    return newtree(n);
+  if(n<data(t)){
+    if(n<data(t->left)){
+      t->left->left = insertsplay(t->left->left,n);
+     t->left= rotateR(t->left);
+    }else if(n>data(t->left)){
+      t->left->right = insertsplay(t->left->right,n);
+      t->left = rotateL;
+    }
+    t = rotateR(t);
+  }else if(n>data(t)){
+    if(n<data(t->right)){
+      t->right->left = insertsplay(t->right->left,n);
+     t->right = rotateR(t->right);
+    }else if(n>data(t->right)){
+      t->right->right = insertsplay(t->right->right,n);
+      t->right =rotateL(t->right);
+    }
+    t= rotateL(n);
+  }
+    return t;
+}
+
+
+Tree moveredL(Tree t){
+  t = colourback(t);
+  if(right(t)&&t->right->left->colour ==RED){
+    t->right = rotateR(t->right);
+    t= rotateL(t);
+    t =  colourback(t);
+  }
+  return t;
+}
+
+
+Tree moveredR(Tree t){
+  t=colourback(t);
+  if(left(t)&&t->left->left->colour==RED){
+   t =  rotateR(t);
+    t = colourback(t);
+  }
+  return t;
+}
+
+
+
+Tree findmin(Tree t){
+  if(t==NULL)
+    return t;
+  left(t)=findmin(left(n));
+  return t;
+}
+
+
+Tree findmind(Tree t){
+  if(left(t)!=NULL)
+    return free(t);
+  left(t)=findmind(left(t));
+  return t;
+}
+
+Tree deleteRBT(Tree t, item n){
+  if(t==NULL)
+    return t;
+if(n<data(t)){
+  if(left(t)!=NULL){
+    if(left(t)->colour!=RED &&left(left(t))->colour!=RED){
+      t = moveredL(t);
+      }
+      left(t)=deleteRBT(left(t),n);
+  }else if(n>data(t)){
+    if(t->left->colour==RED){
+      t = rotateR(t);
+    }
+    if(n==data(t)&&right(t)==NULL){
+      free(t);
+      return null;
+    }
+    if(right(t)!=NULL){
+      if(right(t)->colour ==BLACK &&t->right->left->colour ==BLACK){
+        t = moveredL(t);
+      }
+      if(n==data(t)){
+        Tree new = findmin(t->right);
+        data(t)=data(new);
+        t->right = deleteRBT(t->right,n);
+      }else {
+        h->right = deleteRBT(t->right,n);
+      }
+    }
+  }
+}
+  return RBT(t);
+}
+
+
+
+
+
+
