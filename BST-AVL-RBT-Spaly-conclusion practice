@@ -1,0 +1,191 @@
+
+#define Print_RED "/x1B[31m"
+#define Print_BLACK "/x1B[0m"
+
+
+RotateL(Tree t){
+  if(t==NULL)
+    return t;
+  Tree new = right(t);
+  right(t)=left(new);
+  left(new)=t;
+  colour(new)=colour(t);
+  colour(t)=Red;
+  return new;
+}
+
+
+
+
+RotateR(Tree t){
+  if(t==NULL)
+    return t;
+  Tree new = left(t);
+  left(t)=right(new);
+  right(new)=t;
+  colour(new)=colour(t);
+  colour(t)=RED;
+  return new;
+}
+
+
+
+Tree deletebst(Tree t,item n){
+  if(t==NULL)
+    return t;
+  if(n<data(t)){
+    left(t)=deletebst(left(t),n);
+  }else if(n>data(t)){
+    right(t)=deletebst(right(t),n);
+  }else{
+    if(left(t)==NULL){
+      Tree curring =right(t);
+      free(t);
+      return curring;
+    }else if(right(t)==NULL){
+      Tree curring = left(t);
+      free(t);
+      return curring;
+    }else{
+      free(t);
+      Tree curring =left(t);
+      Tree temp = right(t);
+      t = jointree(curring,temp);
+      return t;
+    }
+  }
+    return t;
+}
+
+Tree insertTree(Tree t, item n){
+  if(t==NULL)
+    return newtree(n);
+  if(n<data(t)){
+    left(t)=insertTree(left(t),n);
+    t= rotateR(t);
+  }else if(n>data(t)){
+    right(t)=insertTree(right(t),n);
+    t =rotateL(t);
+  }
+    return t;
+}
+
+
+Tree balanced(Tree t){
+  if(t==NULL){
+    return t;
+  }
+ t =balanced1(t,num,k);
+ free(t);
+  t = balanced(num,0,0);
+  return t;
+}
+int num[];
+int k=0;
+Tree balanced1(Tree t ,int num, int k){
+  if(t==NULL)
+    return t;
+  left(t)=balanced1(left(t));
+  num[k++]=data(t);
+  right(t)=balanced(right(t));
+  return t;
+}
+
+Tree balanced2(int num,int strat, int end){
+  if(strat>end){
+    return null;
+  }
+  int mid = (start+end)/2;
+  Tree new = newtree(arr[mid]);
+  left(new)=balanced2(left(new),strat, mid-1);
+  right(new)=balanced2(right(new),mid-1,end);
+  return new;
+}
+
+Tree moveredL(Tree t){
+  t = colourback(t);
+  if(right(t)&&left(right(t))==BLACK){
+    t = rotateL(t);
+    t = colourback(t);
+  }
+  return t;
+}
+
+Tree moveRedR(Tree t){
+  t = colourback(t);
+  if(left(t)&&left(left(t))==BLACK){
+    t = rotateR(t);
+    t = colourback(t);
+  }
+  return t;
+}
+
+Tree standartreebst(Tree t, item n){
+  if(right(t)->colour==red&&left(t)->colour==red){
+    t = rotateL(t);
+  }
+  if(left(t)->colour==RED&&left(left(t))==RED){
+    t=rotateR(t);
+  }
+  if(left(t)->colour==RED&&right(t)->colour==RED){
+    t = colourback(t);
+  }
+  return t;
+}
+Tree delemin(Tree t){
+  if(n==NULL)
+    return t;
+  if(t->left->data==NULL)
+    return free(t);
+  if(left(t)->colour ==Black &&left(left(t))==BLACK){
+    t = moveredL(t);
+      left(t)=delemin(left(t));
+    return standardtreebst(t);
+  }
+}
+
+Tree deleteBST(Tree t, item n){
+  if(t==NULL)
+    return t;
+  if(n<data(t)){
+    if(left(t)!=NULL){
+    if(left(t)->colour==BLACK&&left(left(t)==BLACK)){
+      t = movredL(t);
+    }
+        left(t)=deleteBST(left(t),n);
+      }
+      }else{
+      if(left(t)->colour ==RED){
+        t =rotateR(t);
+      }
+      if(n==data(t)&&right(t)==NULL){
+        free(h);
+        return NULL;
+      }
+      if(right(t)!=NULL){
+        if(right(t)->colour == BLACK &&left(right(t))->colour ==BLACK){
+          t = moveredR(t);
+        }
+        if(key ==data(t)){
+          Tree new =mint(right(t));
+          data(t) = data(new);
+          right(t)=deleteBST(right(t),n);
+        }else{
+          right(t)=deleBST(right(t),n);
+        }
+      }
+      }
+  return standardtreeBST(t);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
