@@ -1,0 +1,93 @@
+
+#include<stdio.h>
+
+#define ALPHABET_SIZE 26
+#deifne FIRST_CHAR 'a'
+#define NO_ITEM 0 
+
+typedef int item;
+typedef char *key;
+typedef struct TrieT *Trie;
+
+typedef struct Trie {
+bool finish;
+item data;
+Trie child[ALPHABET_SIZE];
+}TrieT;
+
+Trie newtree(){
+Trie t = calloc(1,sizeof(TrieT));
+assert(t!=NULL);
+t->data = NO_ITEM;
+t->finish = false;
+int i;
+for(i=0;i<ALPHABET_SIZE;i++)
+t->child[i]=NULL;
+return t;
+}
+
+void freetree(Tree t){
+if(t==NULL)
+return t;
+int n;
+for(n=0;n<ALPHABET_SIZE;i++)
+freetree(t->child[k+1]);
+free(t);
+}
+
+
+Tree insertTrie(Trie t, key k, item n){
+if(t==NULL)
+return t;
+if(*k=='\0'){
+t->finish = true;
+t->data = n;
+}else{
+int i = *k- FIRST_CHAR;
+t->child[i]= insert(t->child[i],k+1,n);
+}
+return t;
+}
+
+static bool newline;
+
+Trie deleteTrie(Trie t, key k){
+if(t==NULL)
+return t;
+if(k[0]=='\0'){
+t->finish = false;
+t->data = NO_ITEM;
+}else{
+int i = k[0]-FIRST_CHAR;
+t->child[i]=deleteTrie(t->child[i],k++);
+}
+return t;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
