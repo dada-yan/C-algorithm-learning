@@ -179,13 +179,82 @@ Tree deleteBST(Tree t, item n){
   }
 
 
+Tree deleteBST(Tree t, item n){
+if(t==NULL)
+return T;
+if(n<data(t)){
+if(left(t)!=NULL){
+if(left(t)->colour!=RED&&left(left(t))->colour!=RED){
+t = moveredL(t);
+}
+left(t)=deleteBST(left(t),n);
+}
+}else if(n>data(t)){
+if(left(t)==RED)
+t = rotateR(t);
+if(right(t)->colour!=RED&&left(right(t))->colour!=RED){
+t = moveredR(t);
+}
+right(t)=deletebst(right(t),n);
+}else{
+if(right(t)==NULL){
+free(t);
+return NULL;
+data(t)=data(min(right(t)));
+right(t)=deletebst(right(t),n);
+}
+}
+return backcolour(t);
+}
 
 
+Tree AVLinsert(Tree t,item n){
+if(t==NULL)
+return newtree(n);
+if(n<data(t)){
+left(t)=AVLinsert(left(t),n);
+}else if(n>data(t)){
+right(t)=AVLinsert(right(t),n);
+}else;
+
+int heightL = height(left(t));
+int heightR = height(right(t));
+
+if(heightL-heightR>1){
+if(n>data(left(t))){
+left(t) = rotateL(left(t));
+}
+t = rotateL(t);
+}else if(heightR-heightL>1){
+if(n<data(right(t))){
+right(t)=rotateR(right(t));
+}
+t = rotateR(t);
+}
+return t;
+}
 
 
-
-
-
+Tree splayinsert(Tree t, item n){
+if(t==NULL)
+return newtree(n);
+if(n<data(t)){
+if(n<left(t)){
+left(t) rotateR(left(t));
+}else if(n>left(t)){
+left(t)=rotateL(left(t));
+}
+t = rotateR(t);
+}else if(n>data(t)){
+if(n<right(t)){
+right(t) = rotateR(right(t));
+}else if(n>right(t)){
+right(t) = rotateL(right(t));
+}
+t = rotateL(t);
+}
+return t;
+}
 
 
 
