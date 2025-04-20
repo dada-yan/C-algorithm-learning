@@ -1,0 +1,307 @@
+// Weighted Graph ADT interface ... COMP9024 25T1
+#ifndef WGRAPH_H
+#define WGRAPH_H
+typedef struct GraphRep *Graph;
+
+// vertices are ints
+typedef int Vertex;
+
+// edges are pairs of vertices (end-points) with a weight
+typedef struct Edge {
+   Vertex v;
+   Vertex w;
+   int    weight;
+} Edge;
+
+Graph newGraph(int);
+int   numOfVertices(Graph);
+void  insertEdge(Graph, Edge);
+void  removeEdge(Graph, Edge);
+int   adjacent(Graph, Vertex, Vertex);  // returns weight, or 0 if not adjacent
+void  showGraph(Graph);
+void  freeGraph(Graph);
+#endif 
+
+
+// Weighted Directed Graph ADT
+// Adjacency Matrix Representation ... COMP9024 25T1
+#include "WGraph.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+typedef struct GraphRep {
+   int **edges;  // adjacency matrix storing positive weights
+		 // 0 if nodes not adjacent
+   int nV;       // #vertices
+   int nE;       // #edges
+} GraphRep;
+
+Graph newGraph(int V) {
+   assert(V >= 0);
+   int i;
+
+   Graph g = malloc(sizeof(GraphRep));
+   assert(g != NULL);
+   g->nV = V;
+   g->nE = 0;
+
+   // allocate memory for each row
+   g->edges = malloc(V * sizeof(int *));
+   assert(g->edges != NULL);
+   // allocate memory for each column and initialise with 0
+   for (i = 0; i < V; i++) {
+      g->edges[i] = calloc(V, sizeof(int));
+      assert(g->edges[i] != NULL);
+   }
+
+   return g;
+}
+
+int numOfVertices(Graph g) {
+   return g->nV;
+}
+
+// check if vertex is valid in a graph
+int validV(Graph g, Vertex v) {
+   return (g != NULL && v >= 0 && v < g->nV);
+}
+
+void insertEdge(Graph g, Edge e) {
+   assert(g != NULL && validV(g,e.v) && validV(g,e.w));
+
+   if (g->edges[e.v][e.w] == 0) {   // edge e not in graph
+      g->edges[e.v][e.w] = e.weight;
+      g->nE++;
+   }
+}
+
+void removeEdge(Graph g, Edge e) {
+   assert(g != NULL && validV(g,e.v) && validV(g,e.w));
+
+   if (g->edges[e.v][e.w] != 0) {   // edge e in graph
+      g->edges[e.v][e.w] = 0;
+      g->nE--;
+   }
+}
+
+int adjacent(Graph g, Vertex v, Vertex w) {
+   assert(g != NULL && validV(g,v) && validV(g,w));
+
+   return g->edges[v][w];
+}
+
+void showGraph(Graph g) {
+    assert(g != NULL);
+    int i, j;
+
+    printf("Number of vertices: %d\n", g->nV);
+    printf("Number of edges: %d\n", g->nE);
+    for (i = 0; i < g->nV; i++)
+       for (j = 0; j < g->nV; j++)
+	  if (g->edges[i][j] != 0)
+	     printf("Edge %d - %d: %d\n", i, j, g->edges[i][j]);
+}
+
+void freeGraph(Graph g) {
+   assert(g != NULL);
+
+   int i;
+   for (i = 0; i < g->nV; i++)
+      free(g->edges[i]);
+   free(g->edges);
+   free(g);
+}
+
+
+
+/*  Worst‑case per query: O((L² + F) log L)
+    L = #landmarks, F = #ferry schedules
+    – Scan adjacency matrix: L² relaxations
+    – Each relaxation uses binary‑heap decrease‑key (log L)
+*/
+/******************************************************************************
+ * tripPlan.c — COMP9024 25T1
+ ******************************************************************************/
+
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include "WGraph.h"
+ 
+ #define MAX_NAME 32
+ #define INF_TIME 0x3f3f3f3f
+ 
+ /* --- Ferry list --- */
+ typedef struct FerryNode *FerryList;
+ typedef struct FerryNode { int to, depart, arrive; FerryList next; } FerryNode;
+ 
+ /* --- Prev record --- */
+ typedef enum { WALK, FERRY } StepType;
+ typedef struct { int pred; StepType how; int depart, cost; } PrevRec;
+ 
+ /* --- Globals --- */
+ static int         nL;
+ static char       (*lname)[MAX_NAME];
+ static Graph       walkG;
+ static FerryList  *fAdj;
+ 
+ /* --- Utils --- */
+ static int hhmm2min(int t){ return (t/100)*60 + t%100; }
+ static int min2hhmm(int m){ return (m/60)*100 + m%60; }
+ static int idOf(const char*s){ for(int i=0;i<nL;i++) if(!strcmp(lname[i],s)) return i; return -1; }
+ static void insFerry(int f,int to,int d,int a){
+     FerryNode*n=malloc(sizeof* n); *n=(FerryNode){to,d,a,NULL};
+     FerryList*p=&fAdj[f]; while(*p && (*p)->depart<=d) p=&(*p)->next;
+     n->next=*p; *p=n;
+ }
+ 
+ /* --- Tiny binary heap --- */
+ typedef struct { int *v,*key,*pos,sz,cap; } Heap;
+ static Heap* hpNew(int c){
+     Heap*h=malloc(sizeof*h);
+     h->v  =malloc((c+1)*sizeof* h->v);
+     h->key=malloc((c+1)*sizeof* h->key);
+     h->pos=calloc(c,sizeof* h->pos);
+     h->sz=0; h->cap=c; return h;
+ }
+ static void swap(Heap*h,int i,int j){
+     int vi=h->v[i],vj=h->v[j];
+     h->v[i]=vj; h->v[j]=vi; h->pos[vi]=j; h->pos[vj]=i;
+     int tk=h->key[i]; h->key[i]=h->key[j]; h->key[j]=tk;
+ }
+ static void up(Heap*h,int i){ while(i>1 && h->key[i]<h->key[i/2]){ swap(h,i,i/2); i/=2; } }
+ static void dn(Heap*h,int i){
+     while(2*i<=h->sz){
+         int c=2*i; if(c+1<=h->sz && h->key[c+1]<h->key[c]) c++;
+         if(h->key[i]<=h->key[c]) break;
+         swap(h,i,c); i=c;
+     }
+ }
+ static void hIns(Heap*h,int v,int k){ if(h->pos[v])return;
+     int i=++h->sz; h->v[i]=v; h->key[i]=k; h->pos[v]=i; up(h,i); }
+ static void hDec(Heap*h,int v,int nk){
+     int i=h->pos[v]; if(i && nk<h->key[i]){ h->key[i]=nk; up(h,i); }}
+ static int hPop(Heap*h){ int r=h->v[1]; swap(h,1,h->sz--); h->pos[r]=0; dn(h,1); return r; }
+ static int hEmpty(Heap*h){ return h->sz==0; }
+ static void hFree(Heap*h){ free(h->v); free(h->key); free(h->pos); free(h); }
+ 
+ /* --- Dijkstra with timetable --- */
+ static int dijkstra(int s,int t,int start,PrevRec*pr){
+     int *dist=malloc(nL*sizeof* dist);
+     for(int i=0;i<nL;i++) dist[i]=INF_TIME, pr[i].pred=-1;
+     dist[s]=start;
+ 
+     Heap*hp=hpNew(nL); hIns(hp,s,start);
+ 
+     while(!hEmpty(hp)){
+         int v=hPop(hp); if(v==t) break;
+ 
+         /* walk edges */
+         for(int u=0;u<nL;u++){
+             int w=adjacent(walkG,v,u); if(!w) continue;
+             int alt=dist[v]+w;
+             if(alt<dist[u]){
+                 dist[u]=alt;
+                 pr[u]=(PrevRec){v,WALK,dist[v],w};
+                 hp->pos[u]? hDec(hp,u,alt) : hIns(hp,u,alt);
+             }
+         }
+         /* ferry edges */
+         for(FerryList f=fAdj[v]; f; f=f->next){
+             if(f->depart<dist[v]) continue;
+             int u=f->to, alt=f->arrive;
+             if(alt<dist[u]){
+                 dist[u]=alt;
+                 pr[u]=(PrevRec){v,FERRY,f->depart,f->arrive-f->depart};
+                 hp->pos[u]? hDec(hp,u,alt) : hIns(hp,u,alt);
+             }
+         }
+     }
+     int ans=(dist[t]==INF_TIME)?-1:dist[t];
+     hFree(hp); free(dist); return ans;
+ }
+ 
+/* --- Print route --- */
+static void show(int s,int t,PrevRec *pr){
+    int *path = malloc(nL * sizeof(int)), top = 0;
+    for (int v = t; v != -1; v = pr[v].pred) path[top++] = v;
+
+    for (int i = top - 1; i > 0; i--) {
+        int from = path[i], to = path[i - 1];
+        PrevRec p = pr[to];
+
+        if (p.how == WALK) {
+            printf("Walk %d minute(s):\n", p.cost);
+            printf("  %04d %s\n", min2hhmm(p.depart),         lname[from]);
+            printf("  %04d %s\n", min2hhmm(p.depart + p.cost), lname[to]);
+        } else {
+            printf("Ferry %d minute(s):\n", p.cost);
+            printf("  %04d %s\n", min2hhmm(p.depart),         lname[from]);
+            printf("  %04d %s\n", min2hhmm(p.depart + p.cost), lname[to]);
+        }
+   
+    }
+    printf("\n");        
+    free(path);
+}
+
+
+ 
+ /* --- Read input --- */
+ static void readAll(void){
+     printf("Number of landmarks: "); scanf("%d",&nL);
+     lname=malloc(nL*sizeof* lname);
+     for(int i=0;i<nL;i++) scanf("%s",lname[i]);
+ 
+     walkG=newGraph(nL);
+     fAdj =calloc(nL,sizeof(FerryList));
+ 
+     int nW; printf("Number of walking links: "); scanf("%d",&nW);
+     for(int i=0;i<nW;i++){
+         char a[MAX_NAME],b[MAX_NAME]; int w;
+         scanf("%s %s %d",a,b,&w);
+         int v=idOf(a),u=idOf(b);
+         Edge e={v,u,w}; insertEdge(walkG,e);
+         e=(Edge){u,v,w}; insertEdge(walkG,e);
+     }
+ 
+     int nF; printf("Number of ferry schedules: "); scanf("%d",&nF);
+     for(int i=0;i<nF;i++){
+         char a[MAX_NAME],b[MAX_NAME]; int dep,arr;
+         scanf("%s %d %s %d",a,&dep,b,&arr);
+         insFerry(idOf(a),idOf(b),hhmm2min(dep),hhmm2min(arr));
+     }
+ }
+ 
+ /* --- Query loop --- */
+ static void serve(void){
+     char from[MAX_NAME];
+     int first=1;
+     while((first? printf("\nFrom: "): printf("From: ")), first=0, scanf("%s",from), strcmp(from,"done")){
+         char to[MAX_NAME]; int dep;
+         printf("To: ");              scanf("%s",to);
+         printf("Departure time: ");  scanf("%d",&dep);
+ 
+         int s=idOf(from), t=idOf(to);
+         PrevRec *pr=malloc(nL*sizeof* pr);
+         int ok=dijkstra(s,t,hhmm2min(dep),pr);
+ 
+         if(ok==-1){
+             printf("\nNo route.\n\n");
+         }else{
+             printf("\n");
+             show(s,t,pr);
+         }
+         free(pr);
+     }
+     puts("Happy travels!");
+ }
+ 
+ /* --- main --- */
+ int main(void){
+     readAll();
+     serve();
+     return 0;
+ }
+ 
